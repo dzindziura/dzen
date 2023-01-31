@@ -1,0 +1,22 @@
+.avatar {
+    img{
+        width: 3rem;
+    }
+
+}
+.wrapper{
+    border-radius: 2px;
+    border: 2px solid #575757;
+    padding: 20px;
+    width: 60%;
+}
+.comments_head{
+    background-color: #F5F6F8;
+    
+    div{
+        margin: 5px;
+        .item{
+            padding-top: 4px;
+        }
+    }
+}
