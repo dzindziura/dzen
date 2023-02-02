@@ -5,7 +5,7 @@ const cors = require('cors')
 const fs = require('fs');
 const app = express()
 
-const PORT = 4000;
+const PORT = 5000;
 const HOST = 'localhost';
 
 app.use(bp.json())
@@ -16,9 +16,10 @@ app.use(bp.urlencoded({ extended: false }))
 let connection;
 
 connection = mysql.createConnection({
+    port: '8889',
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'root',
     database: 'comments_db'
 });
 
@@ -45,10 +46,12 @@ const runSQLFile = (fileName) => {
         });
     });
 };
-
-runSQLFile('sql/create/db.sql');
-runSQLFile('sql/create/users.sql');
-runSQLFile('sql/create/comments.sql');
+const runSql = async () => {
+    await runSQLFile('sql/create/db.sql');
+    await runSQLFile('sql/create/users.sql');
+    await runSQLFile('sql/create/comments.sql');
+}
+runSql();
 
 app.post('/createUser', (req, res) => {
     console.log('asdasda')
@@ -64,7 +67,7 @@ app.post('/createUser', (req, res) => {
         return;
       }
       res.json({
-        message: 'Comment saved successfully'
+        message: 'Comment saved successfully',
       });
     });
 });
@@ -72,7 +75,8 @@ app.post('/createUser', (req, res) => {
 app.post('/comments', (req, res) => {
     const comment = {
       user_id: req.body.user_id,
-      replies: req.body.replies,
+      id_replies: req.body.id_replies,
+      replies: 1,
       content: req.body.content,
       created_at: new Date()
     };
@@ -90,7 +94,7 @@ app.post('/comments', (req, res) => {
 });
 
 app.get('/getAllComments', (req, res) => {
-    connection.query('SELECT * FROM comments JOIN users ON comments.user_id = users.id', (error, results, fields) => {
+    connection.query('SELECT * FROM comments RIGHT JOIN users ON users.user_id = comments.user_id', (error, results, fields) => {
         if (error) throw error;
         res.json(results)
       });
