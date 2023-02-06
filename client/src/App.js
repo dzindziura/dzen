@@ -3,10 +3,10 @@ import 'font-awesome/css/font-awesome.min.css';
 import axios from 'axios'; 
 import { Comments } from './components/comments/comments'
 import {useEffect, useState} from 'react';
+
 const App = () => {
   const [arrayDataOldFormat, setArrayDataOldFormat] = useState([]);
-  const [dataComment, setDataComment] = useState([])
-  const [idReplies, setIdReplies] = useState();
+  const [dataComment, setDataComment] = useState([]);
   function transformArray(inputArray) {
     const commentMap = {};
 
@@ -25,7 +25,7 @@ const App = () => {
     return inputArray.filter(comment => !comment.id_replies);
   }
   const getMessages = async () => {
-    const result = await axios.get('http://localhost:6000/getAllComments');
+    const result = await axios.get('http://localhost:5000/getAllComments');
     setArrayDataOldFormat(result.data)
     const inputArrayResult = transformArray(result.data);
 
@@ -33,15 +33,15 @@ const App = () => {
   }
   useEffect(() => {
     getMessages();
+
   }, [])
   const addNewComment = async (data, id = null) => {
-    console.log(idReplies)
     const dataPush = {
       user_id: data.user_id,
       content: data.content,
       id_replies: id
     }
-    await axios.post('http://localhost:6000/comments', dataPush);
+    await axios.post('http://localhost:5000/comments', dataPush);
     getMessages();
   }
 

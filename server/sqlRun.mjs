@@ -3,10 +3,10 @@ import mysql from "mysql2";
 
 let connection;
 connection = mysql.createConnection({
-    port: '8889',
+    // port: '8889',
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '',
     database: 'comments_db'
 });
 

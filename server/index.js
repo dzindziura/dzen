@@ -3,10 +3,10 @@ const mysql = require('mysql2');
 const bp = require('body-parser')
 const cors = require('cors');
 const app = express()
+require('dotenv').config();
 
-const PORT = 6000;
-const HOST = 'localhost';
-
+const PORT = process.env.port;
+const HOST = process.env.host;
 app.use(bp.json())
 app.use(cors())
 app.use(bp.urlencoded({ extended: false }))
@@ -15,10 +15,9 @@ app.use(bp.urlencoded({ extended: false }))
 let connection;
 
 connection = mysql.createConnection({
-    port: '8889',
     host: 'localhost',
     user: 'root',
-    password: 'root',
+    password: '',
     database: 'comments_db'
 });
 
@@ -70,6 +69,7 @@ app.post('/comments', (req, res) => {
 app.get('/getAllComments', (req, res) => {
     connection.query('SELECT * FROM comments RIGHT JOIN users ON users.user_id = comments.user_id', (error, results, fields) => {
         if (error) throw error;
+        console.log(results)
         res.json(results)
       });
 })

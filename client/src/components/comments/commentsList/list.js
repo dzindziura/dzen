@@ -4,11 +4,6 @@ export const List = (props) => {
     const replies = (id2) => {
         props.idReplies(id2)
     }
-    if(props.data === []){
-        return (
-            <h1>No items</h1>
-        )
-    }
     const list = props.data.map(item => {
         return (
             <div className={props.left ? 'mt-5 ml-20': 'mt-5'}>
