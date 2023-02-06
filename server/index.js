@@ -15,9 +15,9 @@ app.use(bp.urlencoded({ extended: false }))
 let connection;
 
 connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
+    host: HOST,
+    user: process.env.user_mysql,
+    password: process.env.pass_mysql,
     database: 'comments_db'
 });
 
