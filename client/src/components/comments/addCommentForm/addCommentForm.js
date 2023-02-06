@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import { usernameValidator, emailValidator } from './validator';
-import validator from 'validator'
 
-export const AddCommentForm = ({send}) => {
+export const AddCommentForm = ({send, form}) => {
     const [usernameValid, setUsernameValid] = useState(false)
     const [emailValid, setEmailValid] = useState(false)
     const sendData = (e) => {
         e.preventDefault()
         if(emailValid && usernameValid){
             const data = {
-                username: e.currentTarget.elements.username.value,
+                user_id: 1,
+                id_replies: null,
+                content: e.currentTarget.elements.comment.value,
+                name: e.currentTarget.elements.username.value,
                 email: e.currentTarget.elements.email.value,
-                homepage: e.currentTarget.elements.homepage.value,
-                comment: e.currentTarget.elements.comment.value
             }
             send(data);
             e.currentTarget.elements.username.value = '';
@@ -30,7 +29,7 @@ export const AddCommentForm = ({send}) => {
         console.log(emailValid)
     }
     return (
-        <div className='mb-5'>
+        <div className={`mb-5 ${form ? '' : 'hidden'}`}>
             <div class="w-full">
                 <form class="w-full max-w-lg mx-auto" onSubmit={sendData}>
                     <div class="flex flex-wrap -mx-3 mb-6">

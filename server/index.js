@@ -1,11 +1,10 @@
 const express = require('express');
 const mysql = require('mysql2');
 const bp = require('body-parser')
-const cors = require('cors')
-const fs = require('fs');
+const cors = require('cors');
 const app = express()
 
-const PORT = 5000;
+const PORT = 6000;
 const HOST = 'localhost';
 
 app.use(bp.json())
@@ -30,28 +29,6 @@ connection.connect(function (err) {
     }
     console.log('Connected to database as id ' + connection.threadId);
 });
-
-const runSQLFile = (fileName) => {
-    fs.readFile(fileName, 'utf-8', function (err, data) {
-        if (err) {
-            console.error(`Error reading SQL file ${fileName}: ` + err.stack);
-            return;
-        }
-        connection.query(data, function (error, results, fields) {
-            if (error) {
-                console.error(`Error executing SQL file ${fileName}: ` + error.stack);
-                return;
-            }
-            console.log(`SQL file ${fileName} executed successfully`);
-        });
-    });
-};
-const runSql = async () => {
-    await runSQLFile('sql/create/db.sql');
-    await runSQLFile('sql/create/users.sql');
-    await runSQLFile('sql/create/comments.sql');
-}
-runSql();
 
 app.post('/createUser', (req, res) => {
     console.log('asdasda')
@@ -80,16 +57,13 @@ app.post('/comments', (req, res) => {
       content: req.body.content,
       created_at: new Date()
     };
-    
     connection.query('INSERT INTO comments SET ?', comment, function (error, results, fields) {
       if (error) {
         console.error('Error saving comment: ' + error.stack);
         res.status(500).send('Error saving comment');
         return;
       }
-      res.json({
-        message: 'Comment saved successfully'
-      });
+      res.json({comment_id: results.insertId, ...comment});
     });
 });
 

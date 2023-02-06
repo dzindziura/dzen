@@ -2,18 +2,19 @@ import './App.css';
 import 'font-awesome/css/font-awesome.min.css';
 import axios from 'axios'; 
 import { Comments } from './components/comments/comments'
-import { useEffect } from 'react';
+import {useEffect, useState} from 'react';
 const App = () => {
+  const [arrayDataOldFormat, setArrayDataOldFormat] = useState([]);
+  const [dataComment, setDataComment] = useState([])
+  const [idReplies, setIdReplies] = useState();
   function transformArray(inputArray) {
     const commentMap = {};
 
-    // Create a map of comments
     inputArray.forEach(comment => {
       comment.replies = []
       commentMap[comment.coment_id] = comment;
     });
 
-    // Link the replies
     inputArray.forEach(comment => {
       const parentComment = commentMap[comment.id_replies];
       if (parentComment) {
@@ -21,22 +22,32 @@ const App = () => {
       }
     });
 
-    // Return the root comments (comments with no parent)
     return inputArray.filter(comment => !comment.id_replies);
   }
-  useEffect(() => {
-    const getMessages = async () => {
-      const result = await axios.get('http://localhost:5000/getAllComments');
-      // console.log(result.data)
-      const inputArrayResult = transformArray(result.data);
+  const getMessages = async () => {
+    const result = await axios.get('http://localhost:6000/getAllComments');
+    setArrayDataOldFormat(result.data)
+    const inputArrayResult = transformArray(result.data);
 
-      console.log(inputArrayResult)
-    }
+    setDataComment(inputArrayResult);
+  }
+  useEffect(() => {
     getMessages();
-  })
+  }, [])
+  const addNewComment = async (data, id = null) => {
+    console.log(idReplies)
+    const dataPush = {
+      user_id: data.user_id,
+      content: data.content,
+      id_replies: id
+    }
+    await axios.post('http://localhost:6000/comments', dataPush);
+    getMessages();
+  }
+
   return (
     <div className="App">
-      <Comments />
+      <Comments data={dataComment} addNewComment={addNewComment}/>
     </div>
   );
 }
