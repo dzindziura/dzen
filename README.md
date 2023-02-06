@@ -15,3 +15,5 @@
 ### 2) npm install
 ### 3) add env variable and run project = example: 
 ### set "process.env.REACT_APP_LINK=http://localhost:5000/" && npm start
+
+### in order to reply to the comment you need to click on "#"
